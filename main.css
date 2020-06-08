@@ -72,3 +72,25 @@ body {
     height:150px;
     font-size:60pt;
 }
+
+.footerholder {
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+}
+
+.footer {
+    background: none repeat scroll 0 0 transparent;
+    height: 20px;
+    margin: auto;
+    width: 400px;
+    font-size: 10px;
+    color:#75715E;
+}
+
+a {
+  color: #F92672;
+  text-decoration: none;
+}
