@@ -14,21 +14,30 @@ function parse(input) {
 
 	input = input.toLowerCase();
 
-	var regex = /^([cdefgab]#?){1}(maj?|min?|m?|dim?|aug?|sus?|sus2?|sus4?)?(7?|9?|11?|13?)?\/?([cdefgab]#?)?$/g;
+	//var regex = /^([cdefgab]#?){1}(maj?|min?|m?|dim?|aug?|sus?|sus2?|sus4?)?(7?|9?|11?|13?)?(sus?|sus2?|sus4?)?\/?([cdefgab]#?)?$/g;
+	var regex = /^([cdefgab]#?){1}(maj|min|mi|m|dim|di|aug|au|s|su|sus|sus2|sus4)?(7?|9?|11?|13?)?(s|su|sus|sus2|sus4)?(fl|fla|flat|flat5)?\/?([cdefgab]#?)?$/g;
 	var match = regex.exec(input);
 
 	if(!match) return;
 
+	var notation = match[0];
 	var r = match[1]; // root
 	var type = match[2]; // triad type
 	var num = match[3]; // seventh, ninth, etc
-	var inversion = match[4]; // chord inversions
+	var sus = match[4]; // suspensions
+	var halfDim = match[5]; // half diminished sevenths
+	var inversion = match[6]; // chord inversions
+	var dominant7th = false;
+
+	if(["a", "a#", "b"].includes(r)) {
+		r = r + "-1";
+	}
 
 	var notes = buildMajor(r);
 
 	if(type) {
 		// maj, min, m, dim, sus
-		if(type == "min" || type == "m") {
+		if(["min", "m", "mi"].includes(type)) {
 			notes = buildMinor(r);
 		} else if(type == "dim") {
 			notes = buildDim(r);
@@ -36,30 +45,63 @@ function parse(input) {
 			notes = buildAug(r);
 		} else if (type == "sus2") {
 			notes[1] = notes[1] - 2;
-		} else if (type == "sus" || type == "sus4") {
+		} else if (type == "sus4") {
+			// this doesn't seem to be capturing sus?
 			notes[1] = notes[1] + 1;
 		}
 	}
 
 	if(num) {
-		// 7, 9, 11, 13
-		if(type == "maj" || type == "min") {
+		// 7, 9
+		if(type == "maj") {
 			if(num == "7") {
-				notes.push(notes[2] + 4)
+				notes.push(notes[0] + 11);
+			} else if(num == "9") {
+				notes.push(notes[0] + 11);
+				notes.push(notes[0] + 14);
+			}
+		} else if(type == "dim") {
+			if(num == "7") {
+				notes.push(notes[0] + 9);
+			}
+		} else if(["m", "min"].includes(type)){
+			if(num == "7") {
+				notes.push(notes[0] + 10);
+			} else if(num == "9") {
+				notes.push(notes[0] + 10);
+				notes.push(notes[0] + 14);
 			}
 		} else {
 			if(num == "7") {
-				notes.push(notes[2] + 3)
+				dominant7th = true;
+				notes.push(notes[0] + 10);
+			} else if(num == "9") {
+				dominant7th = true;
+				notes.push(notes[0] + 10);
+				notes.push(notes[0] + 14);
 			}
 		}
 	}
 
-	// need to find closest bass note
-	if(inversion) {
-		notes.unshift(keyboard.findIndex(key => {
-			return key == inversion + "-1";
-		}));
+	if(sus && (type == "maj" || dominant7th)) {
+		if (sus == "sus2") {
+			notes[1] = notes[1] - 2;
+		} else if (sus == "sus4") {
+			notes[1] = notes[1] + 1;
+		}
 	}
+
+	if(halfDim == "flat5" && ["min", "m", "mi"].includes(type)) {
+		notes[2] = notes[2] - 1;
+	}
+
+	// need to find closest bass note
+	// work in progress for inversions, v complex? 
+	// if(inversion && notation.includes("/")) {
+	// 	notes.unshift(keyboard.findIndex(key => {
+	// 		return key == inversion + "-1";
+	// 	}));
+	// }
 
 	notes.forEach(n => {
 		var note = document.getElementById(keyboard[n]);
@@ -81,10 +123,6 @@ function buildMinor(input) {
 	});
 
 	return [r, r + 3, r + 3 + 4];
-}
-
-function buildSus(input) {
-	// ?
 }
 
 function buildAug(input) {

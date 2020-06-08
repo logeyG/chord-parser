@@ -3,15 +3,16 @@ html {
 }
 
 body {
-  height: 100%;
+  height: 90%;
   display: -webkit-box;
   display: flex;
   margin: auto;
   -webkit-box-pack: center;
-          justify-content: center;
+  justify-content: center;
   -webkit-box-align: center;
-          align-items: center;
+  align-items: center;
   background-color: #111;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .key {
@@ -63,34 +64,49 @@ body {
   border-right: 0.12vw solid #AAAAAA;
 }
 
-#chord-input {
-    background-color:rgba(0, 0, 0, 0);
-    color:#75715E;
-    border: none;
-    outline:none;
-   
-    height:150px;
-    font-size:60pt;
+.footerholder {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  text-align: right;
 }
 
-.footerholder {
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
-    position: fixed;
-    text-align: center;
-    width: 100%;
+.inputholder {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 20vh;
+  position: absolute;
+  width: 70%;
+  text-align: center;
+}
+
+#chord-input {
+  background-color:rgba(0, 0, 0, 0);
+  color:#75715E;
+  border: none;
+  outline: none;
+  height:10vw;
+  font-size:8vw;
+  padding: 0.2em; 
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
 }
 
 .footer {
-    background: none repeat scroll 0 0 transparent;
-    height: 20px;
-    margin: auto;
-    width: 400px;
-    font-size: 10px;
-    color:#75715E;
+  background: none repeat scroll 0 0 transparent;
+  margin: .5vw;
+  font-size: 8px;
+  color:#75715E;
+  bottom: 0;
 }
 
 a {
   color: #F92672;
+  text-decoration: none;
+}
+
+a.src {
+  color: #a6e22e;
   text-decoration: none;
 }
