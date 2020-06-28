@@ -5,6 +5,7 @@ var keyboard = [
     'c2', 'c#2', 'd2', 'd#2', 'e2', 'f2', 'f#2', 'g2', 'g#2', 'a2', 'a#2', 'b2'
 ];
 
+
 function parse(input) {
     var elements = document.getElementById("keyboard").children;
 
@@ -18,14 +19,13 @@ function parse(input) {
 
     input = input.toLowerCase();
 
-    //var regex = /^([cdefgab]#?){1}(maj?|min?|m?|dim?|aug?|sus?|sus2?|sus4?)?(7?|9?|11?|13?)?(sus?|sus2?|sus4?)?\/?([cdefgab]#?)?$/g;
-    var regex = /^([cdefgab]#?){1}(maj|min|m|dim|aug|sus|sus2|sus4)?(7?|9?|11?|13?)?(sus|sus2|sus4)?(flat5)?\/?([cdefgab]#?)?$/g;
+    var regex = /^([cdefgab]#?){1}(maj|min|m|dim|aug|sus|sus2|sus4)?(6?|7?|9?|11?|13?)?(sus|sus2|sus4)?(flat5)?\/?([cdefgab]#?)?$/g;
     var match = regex.exec(input);
 
     if (!match) {
         return;
     } else {
-    	Array.from(elements).forEach(e => {
+        Array.from(elements).forEach(e => {
             e.classList.remove("hlight");
         });
     }
@@ -39,7 +39,7 @@ function parse(input) {
     var inversion = match[6]; // chord inversions
     var dominant = false;
 
-    if (["a", "a#", "b"].includes(r)) {
+    if (["g", "g#", "a", "a#", "b"].includes(r)) {
         r = r + "-1";
     }
 
@@ -61,70 +61,32 @@ function parse(input) {
     }
 
     if (num) {
-        // this can probably get greatly simplified?
-        // 7, 9, 11, 13
-        if (type == "maj") {
-            if (num == "7") {
-                notes_i.push(notes_i[0] + 11);
-            } else if (num == "9") {
-                notes_i.push(notes_i[0] + 11);
-                notes_i.push(notes_i[0] + 14);
-            } else if (num == "11") {
-                notes_i.push(notes_i[0] + 11);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 17);
-            } else if (num == "13") {
-                notes_i.push(notes_i[0] + 11);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 21);
-            }
-        } else if (type == "dim") {
-            if (num == "7") {
-                notes_i.push(notes_i[0] + 9);
-            } else if (num == "9") {
-                notes_i.push(notes_i[0] + 9);
-                notes_i.push(notes_i[0] + 12);
-            } else if (num == "11") {
-                notes_i.push(notes_i[0] + 9);
-                notes_i.push(notes_i[0] + 12);
-                notes_i.push(notes_i[0] + 15);
-            } else if (num == "13") {
-                notes_i.push(notes_i[0] + 9);
-                notes_i.push(notes_i[0] + 12);
-                notes_i.push(notes_i[0] + 18);
-            }
-        } else if (["m", "min"].includes(type)) {
-            if (num == "7") {
-                notes_i.push(notes_i[0] + 10);
-            } else if (num == "9") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 13);
-            } else if (num == "11") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 17);
-            } else if (num == "13") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 19);
-            }
-        } else {
-            dominant = true;
-             if (num == "7") {
-                notes_i.push(notes_i[0] + 10);
-            } else if (num == "9") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 13);
-            } else if (num == "11") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 17);
-            } else if (num == "13") {
-                notes_i.push(notes_i[0] + 10);
-                notes_i.push(notes_i[0] + 14);
-                notes_i.push(notes_i[0] + 19);
+        // 6, 7, 9, 11, 13
+        if (["6", "7", "9", "11", "13"].includes(num)) {
+
+            if(num == "6") {
+               notes_i[3] = notes_i[2] + 2;
+            } else if (type == "maj") {
+                var scale = buildMajorScale(r);
+                addExtended(num, notes_i, scale, type);
+            } else if (["m", "min"].includes(type)) {
+                var scale = buildMinorScale(r);
+                addExtended(num, notes_i, scale, type);
+            } else if (["dim", "aug"].includes(type)) {
+                var scale = buildMajorScale(r);
+
+                if (num == "7") {
+                    notes_i.push(scale[6] - 1);
+                }
+
+            } else if (!type) {
+                dominant = true;
+                var scale = buildMajorScale(r);
+                addExtended(num, notes_i, scale, type);
+                notes_i[3] = notes_i[3] - 1;
             }
         }
+
     }
 
     if (sus && (type == "maj" || dominant)) {
@@ -135,16 +97,16 @@ function parse(input) {
         }
     }
 
-    if (halfDim == "flat5" && ["min", "m"].includes(type)) {
+    if (halfDim == "flat5") {
         notes_i[2] = notes_i[2] - 1;
     }
 
     // need to find closest bass note
     // work in progress for inversions, v complex? 
     // if(inversion && notation.includes("/")) {
-    // 	notes_i.unshift(keyboard.findIndex(key => {
-    // 		return key == inversion + "-1";
-    // 	}));
+    //  notes_i.unshift(keyboard.findIndex(key => {
+    //      return key == inversion + "-1";
+    //  }));
     // }
 
 
@@ -157,6 +119,29 @@ function parse(input) {
     });
 
     return notes;
+}
+
+function addExtended(num, notes_i, scale, type) {
+    if (num == "7") {
+        notes_i.push(scale[6]);
+    } else if (num == "9") {
+        notes_i.push(scale[6]);
+        notes_i.push(scale[8]);
+    } else if (num == "11") {
+        notes_i.push(scale[6]);
+        notes_i.push(scale[8]);
+        notes_i.push(scale[10]);
+    } else if (num == "13") {
+        notes_i.push(scale[6]);
+        notes_i.push(scale[8]);
+
+        // 13th extended chords go outside the scale
+        if (!type || type == "maj") {
+            notes_i.push(scale[12]);
+        } else if (["m", "min"].includes(type)) {
+            notes_i.push(scale[8] + 5);
+        }
+    }
 }
 
 function buildMajor(input) {
@@ -173,6 +158,26 @@ function buildMinor(input) {
     });
 
     return [r, r + 3, r + 3 + 4];
+}
+
+function buildMajorScale(root) {
+    // Whole - Whole - Half - Whole - Whole - Whole - Half
+    var r = keyboard.findIndex(key => {
+        return key == root;
+    });
+
+    var scale = [r, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
+    return scale.map((elem, i) => scale.slice(0, i + 1).reduce((a, b) => a + b));
+}
+
+function buildMinorScale(root) {
+    // Whole - Half - Whole - Whole - Half - Whole - Whole
+    var r = keyboard.findIndex(key => {
+        return key == root;
+    });
+
+    var scale = [r, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
+    return scale.map((elem, i) => scale.slice(0, i + 1).reduce((a, b) => a + b));
 }
 
 function buildAug(input) {
