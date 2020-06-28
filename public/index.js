@@ -64,21 +64,20 @@ function parse(input) {
         // 6, 7, 9, 11, 13
         if (["6", "7", "9", "11", "13"].includes(num)) {
 
-            if(num == "6") {
-               notes_i[3] = notes_i[2] + 2;
+            if (num == "6") {
+                notes_i[3] = notes_i[2] + 2;
             } else if (type == "maj") {
                 var scale = buildMajorScale(r);
                 addExtended(num, notes_i, scale, type);
             } else if (["m", "min"].includes(type)) {
                 var scale = buildMinorScale(r);
                 addExtended(num, notes_i, scale, type);
-            } else if (["dim", "aug"].includes(type)) {
+            } else if (type == "dim") {
                 var scale = buildMajorScale(r);
-
-                if (num == "7") {
-                    notes_i.push(scale[6] - 1);
-                }
-
+                if (num == "7") notes_i.push(scale[6] - 2);
+            } else if (type == "aug") {
+                var scale = buildMajorScale(r);
+                if (num == "7") notes_i.push(scale[6] - 1);
             } else if (!type) {
                 dominant = true;
                 var scale = buildMajorScale(r);
@@ -100,15 +99,6 @@ function parse(input) {
     if (halfDim == "flat5") {
         notes_i[2] = notes_i[2] - 1;
     }
-
-    // need to find closest bass note
-    // work in progress for inversions, v complex? 
-    // if(inversion && notation.includes("/")) {
-    //  notes_i.unshift(keyboard.findIndex(key => {
-    //      return key == inversion + "-1";
-    //  }));
-    // }
-
 
     var notes = [];
     notes_i.forEach(n => {
@@ -139,7 +129,7 @@ function addExtended(num, notes_i, scale, type) {
         if (!type || type == "maj") {
             notes_i.push(scale[12]);
         } else if (["m", "min"].includes(type)) {
-            notes_i.push(scale[8] + 5);
+            notes_i.push(scale[8] + 7);
         }
     }
 }

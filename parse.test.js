@@ -41,10 +41,42 @@ test('sus4', () => {
 
 test('aug', () => {
   expect(parse('caug')).toStrictEqual(['c', 'e', 'g#']);
-  expect(parse('g#aug')).toStrictEqual(['g#', 'c2', 'e2']);
+  expect(parse('g#aug')).toStrictEqual(['g#-1', 'c', 'e']);
 });
 
 test('dim', () => {
   expect(parse('cdim')).toStrictEqual(['c', 'd#', 'f#']);
-  expect(parse('g#dim')).toStrictEqual(['g#', 'b', 'd2']);
+  expect(parse('g#dim')).toStrictEqual(['g#-1', 'b-1', 'd']);
+});
+
+test('6th', () => {
+  expect(parse('c6')).toStrictEqual(['c', 'e', 'g', 'a']);
+  expect(parse('cm6')).toStrictEqual(['c', 'd#', 'g', 'a']);
+  expect(parse('cmaj6')).toStrictEqual(['c', 'e', 'g', 'a']);
+});
+
+test('7th', () => {
+  expect(parse('c7')).toStrictEqual(['c', 'e', 'g', 'a#']);
+  expect(parse('cm7')).toStrictEqual(['c', 'd#', 'g', 'a#']);
+  expect(parse('cmaj7')).toStrictEqual(['c', 'e', 'g', 'b']);
+  expect(parse('cdim7')).toStrictEqual(['c', 'd#', 'f#', 'a']);
+  expect(parse('caug7')).toStrictEqual(['c', 'e', 'g#', 'a#']);
+});
+
+test('9th', () => {
+  expect(parse('c9')).toStrictEqual(['c', 'e', 'g', 'a#', 'd2']);
+  expect(parse('cm9')).toStrictEqual(['c', 'd#', 'g', 'a#', 'd2']);
+  expect(parse('cmaj9')).toStrictEqual(['c', 'e', 'g', 'b', 'd2']);
+});
+
+test('11th', () => {
+  expect(parse('c11')).toStrictEqual(['c', 'e', 'g', 'a#', 'd2', 'f2']);
+  expect(parse('cm11')).toStrictEqual(['c', 'd#', 'g', 'a#', 'd2', 'f2']);
+  expect(parse('cmaj11')).toStrictEqual(['c', 'e', 'g', 'b', 'd2', 'f2']);
+});
+
+test('13th', () => {
+  expect(parse('c13')).toStrictEqual(['c', 'e', 'g', 'a#', 'd2', 'a2']);
+  expect(parse('cm13')).toStrictEqual(['c', 'd#', 'g', 'a#', 'd2', 'a2']);
+  expect(parse('cmaj13')).toStrictEqual(['c', 'e', 'g', 'b', 'd2', 'a2']);
 });
