@@ -1,8 +1,8 @@
 var keyboard = [
     // -1 used as bass notes_i
-    'c-1', 'c#-1', 'd-1', 'd#-1', 'e-1', 'f-1', 'f#-1', 'g-1', 'g#-1', 'a-1', 'a#-1', 'b-1',
-    'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b',
-    'c2', 'c#2', 'd2', 'd#2', 'e2', 'f2', 'f#2', 'g2', 'g#2', 'a2', 'a#2', 'b2'
+    'C-1', 'C#-1', 'D-1', 'D#-1', 'E-1', 'F-1', 'F#-1', 'G-1', 'G#-1', 'A-1', 'A#-1', 'B-1',
+    'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B',
+    'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'b2'
 ];
 
 
@@ -17,9 +17,9 @@ function parse(input) {
         return;
     }
 
-    input = input.toLowerCase();
+    //input = input.toLowerCase();
 
-    var regex = /^([cdefgab]#?){1}(maj|min|m|dim|aug|sus|sus2|sus4)?(6?|7?|9?|11?|13?)?(sus|sus2|sus4)?(flat5)?\/?([cdefgab]#?)?$/g;
+    var regex = /^([CDEFGAB](?:#)?|[CDEFGAB](?:b)?){1}(maj|min|m|dim|aug|sus|sus2|sus4)?(6?|7?|9?|11?|13?)?(sus|sus2|sus4)?(flat5)?$/g;
     var match = regex.exec(input);
 
     if (!match) {
@@ -39,7 +39,18 @@ function parse(input) {
     var inversion = match[6]; // chord inversions
     var dominant = false;
 
-    if (["g", "g#", "a", "a#", "b"].includes(r)) {
+    var flatToSharp = {};
+    flatToSharp["Db"] = "C#";
+    flatToSharp["Eb"] = "D#";
+    flatToSharp["Gb"] = "F#";
+    flatToSharp["Ab"] = "G#";
+    flatToSharp["Bb"] = "A#";
+
+    if(r.includes("b")) {
+        r = flatToSharp[r];
+    }
+
+    if (["G", "G#", "A", "A#", "B"].includes(r)) {
         r = r + "-1";
     }
 
@@ -103,8 +114,8 @@ function parse(input) {
     var notes = [];
     notes_i.forEach(n => {
         var note = document.getElementById(keyboard[n]);
-        notes.push(keyboard[n]);
 
+        notes.push(keyboard[n]);
         note.classList.add("hlight");
     });
 
@@ -188,6 +199,7 @@ function buildDim(input) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
     var i = document.getElementById('chord-input');
+
     i.addEventListener('input', function() {
         parse(i.value);
     }, false);
