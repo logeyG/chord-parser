@@ -96,9 +96,29 @@ body {
 .footer {
   background: none repeat scroll 0 0 transparent;
   margin: .5vw;
-  font-size: 8px;
+  font-size: 10px;
   color:#75715E;
   bottom: 0;
+}
+
+.header {
+  background: none repeat scroll 0 0 transparent;
+  margin-right: .5vw;
+  font-size: 36px;
+  color:#75715E;
+  top: 0;
+}
+
+.headerholder {
+  background: none repeat scroll 0 0 transparent;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  text-align: right;
+}
+
+.blocker {
+  z-index: 99 !important;
 }
 
 a {
@@ -109,4 +129,14 @@ a {
 a.src {
   color: #a6e22e;
   text-decoration: none;
+}
+
+code {
+    background: #f4f4f4;
+    color: #666;
+    font-family: monospace;
+    font-size: 14px;
+    word-wrap: break-word;
+    border: 1px solid #ddd;
+    line-height: 1.6;
 }

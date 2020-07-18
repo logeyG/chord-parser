@@ -46,7 +46,7 @@ function parse(input) {
     flatToSharp["Ab"] = "G#";
     flatToSharp["Bb"] = "A#";
 
-    if(r.includes("b")) {
+    if (r.includes("b")) {
         r = flatToSharp[r];
     }
 
@@ -197,7 +197,56 @@ function buildDim(input) {
     return [r, r + 3, r + 3 + 3];
 }
 
+function setupModal() {
+    // instanciate new modal
+    var modal = new tingle.modal({
+        footer: false,
+        stickyFooter: false,
+        closeMethods: ['overlay', 'button', 'escape'],
+        closeLabel: "Close",
+        cssClass: ['custom-modal-class'],
+        onOpen: function() {
+            console.log('modal open');
+        },
+        onClose: function() {
+            console.log('modal closed');
+        },
+        beforeClose: function() {
+            // here's goes some logic
+            // e.g. save content before closing the modal
+            return true; // close the modal
+            return false; // nothing happens
+        }
+    });
+
+    var content = '<h2>Usage</h2>';
+    content += '<p>Supports the following: </p>';
+    content += '<ul><li>sharps - <code>C#</code></li>';
+    content += '<li>flats - <code>Bb</code></li>';
+    content += '<li>major - <code>Cmaj7</code></li>';
+    content += '<li>minor - <code>Cm</code></li>';
+    content += '<li>dominant - <code>C7</code></li>';
+    content += '<li>augmented - <code>Caug</code></li>';
+    content += '<li>diminished - <code>Cdim</code></li>';
+    content += '<li>half-diminished - <code>Cdim7flat5</code></li>';
+    content += '<li>suspensions (sus, sus2, sus4) - <code>C7sus</code></li>';
+    content += '<li>extensions (7, 9, 11, 13) - <code>C13</code></li>';
+    content += '</ul>';
+    content += "<p>Found a bug? Want to add a feature? <a href='https://github.com/logeyG/chord-parser'>PRs are open.</a></pr>";
+
+    // set content
+    modal.setContent(content);
+
+    return modal;
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
+    var modal = setupModal();
+    var m = document.getElementById('help-modal');
+    m.addEventListener('click', function() {
+        modal.open();
+    });
+
     var i = document.getElementById('chord-input');
 
     i.addEventListener('input', function() {
