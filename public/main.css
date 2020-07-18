@@ -67,6 +67,7 @@ body {
 .footerholder {
   background: none repeat scroll 0 0 transparent;
   bottom: 0;
+  right: 3;
   position: fixed;
   width: 100%;
   text-align: right;
@@ -76,7 +77,7 @@ body {
   background: none repeat scroll 0 0 transparent;
   bottom: 20vh;
   position: absolute;
-  width: 70%;
+  width: 80%;
   text-align: center;
 }
 
@@ -104,7 +105,7 @@ body {
 .header {
   background: none repeat scroll 0 0 transparent;
   margin-right: .5vw;
-  font-size: 36px;
+  font-size: 48px;
   color:#75715E;
   top: 0;
 }
@@ -112,6 +113,7 @@ body {
 .headerholder {
   background: none repeat scroll 0 0 transparent;
   top: 0;
+  right: 3;
   position: fixed;
   width: 100%;
   text-align: right;
