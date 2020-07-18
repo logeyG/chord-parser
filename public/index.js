@@ -207,6 +207,7 @@ function setupModal() {
         onOpen: function() {
         },
         onClose: function() {
+            document.getElementById("chord-input").focus();
         },
         beforeClose: function() {
             return true; // close the modal
@@ -242,6 +243,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     var i = document.getElementById('chord-input');
+    i.focus();
 
     i.addEventListener('input', function() {
         parse(i.value);
