@@ -1,3 +1,3 @@
 # chord-parser
 
-https://chord-parser.dev/
+https://infallible-johnson-420f80.netlify.app/#
